@@ -23,17 +23,20 @@ exports.submitCompetence = async (req,res,next) => {
   const {skill1,skill2,skill3,skill1Level,skill2Level,skill3Level,available} = req.body
   const newSkills =[skill1,skill2,skill3]
   const arrayLevel =[skill1Level,skill2Level,skill3Level]
-  // //Find the old one if difference then delete it
-  // const oldSkills = await Competences.find({"userArray.userID":userID},"skillName")
-  // if(oldSkills.length > 0){
-  // const skillToDelete = oldSkills.filter(el => !newSkills.includes(el.skillName))
-  //   if(skillToDelete.length > 0){
-  // const abc = await Competences.findOneAndUpdate(
-  //   {skillName:skillToDelete[0].skillName},
-  //   {$pull:{userArray:{"userID":userID}}})
-  // }}
-  //Update and create if not exist
+  //Find the old one if difference then delete it
+  const oldSkills = await Competences.find({"userArray.userID":userID},"skillName")
+  if(oldSkills.length > 0){
+  const skillToDelete = oldSkills.filter(el => !newSkills.includes(el.skillName))
+  console.log(skillToDelete)
+    if(skillToDelete.length > 0){
+  const abc = await Competences.findOneAndUpdate(
+    {skillName:skillToDelete[0].skillName},
+    {$pull:{userArray:{"userID":userID}}}
+    )
+  }}
 
+
+  //Update and create if not exist
   for(let i = 0;i<3;i++){
   let createOne = {userID,level:arrayLevel[i],available}
   let pushOne = {$push:{"userArray":{userID,level:arrayLevel[i],available}}}
