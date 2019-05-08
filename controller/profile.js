@@ -6,9 +6,10 @@ exports.submitProfile = async (req, res, next) => {
   const competencies = [{[skill1]:skill1Level},{[skill2]:skill2Level},{[skill3]:skill3Level}]
   const userID = req.user._id
   const option = { upsert: true, new: true ,setDefaultsOnInsert: true}
-  let updateOne= {companyCity,competencies,userID,available}
+  let updateOne= {companyCity,competencies,available}
   try{
   const result = await Profile.findOneAndUpdate({userID},updateOne,option).exec()
+  req.profileID = result._id
   return next()
     }
   catch (err) {
@@ -19,17 +20,16 @@ exports.submitProfile = async (req, res, next) => {
 
 exports.submitCompetence = async (req,res,next) => {
   try{
-  const userID = req.user._id
   const {skill1,skill2,skill3,skill1Level,skill2Level,skill3Level,available} = req.body
   const newSkills =[skill1,skill2,skill3]
   const arrayLevel =[skill1Level,skill2Level,skill3Level]
-  let profileID = await Profile.findOne({userID})
-  profileID=profileID._id
+  let profileID = req.profileID
+  console.log(profileID)
   //Find the old one if difference then delete it
   const oldSkills = await Competences.find({"userArray.profileID":profileID},"skillName")
   if(oldSkills.length > 0){
   const skillToDelete = oldSkills.filter(el => !newSkills.includes(el.skillName))
-  console.log(skillToDelete)
+  console.log("Skill to delete " + skillToDelete)
     if(skillToDelete.length > 0){
   const abc = await Competences.findOneAndUpdate(
     {skillName:skillToDelete[0].skillName},
@@ -50,12 +50,10 @@ exports.submitCompetence = async (req,res,next) => {
     await Competences.create({skillName:newSkills[i],userArray:createOne})
   } else{
    const userExist = await Competences.findOne({skillName:newSkills[i],"userArray.profileID":profileID})// User exist in this document or not
-   console.log(userExist) //skill doc exist but there is no userID => false so push into Array
+    //skill doc exist but there is no userID => false so push into Array
     if(!userExist){
-      console.log("here")
       await Competences.findOneAndUpdate({skillName:newSkills[i]},pushOne)
     } else{
-      console.log("hehe")
       await Competences.findOneAndUpdate(
       {skillName:newSkills[i],"userArray.profileID":profileID},
       {"userArray.$.profileID":profileID,"userArray.$.level":arrayLevel[i],"userArray.$.available":available})
