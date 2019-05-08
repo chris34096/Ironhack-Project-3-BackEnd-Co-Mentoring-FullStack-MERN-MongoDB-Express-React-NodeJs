@@ -6,8 +6,9 @@ skillName:{
   type:String,
   required:true
 },
-userArray:[{
-    userID:{type:Schema.Types.ObjectId,ref:"Profile"},
+userArray:[
+  {
+    profileID:{type:Schema.Types.ObjectId,ref:"Profile"},
     level:{type:Number},
     available:{
       type:Boolean,

@@ -11,6 +11,7 @@ const db = require('./config/keys').mongoURI
 //Routes
 const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profile.js')
+const searchRoutes = require('./routes/search')
 
 
 
@@ -36,6 +37,7 @@ require('./config/passport')(passport)
 // Use Routes
 app.use('/api/user',authRoutes)
 app.use('/api/profile',profileRoutes)
+app.use('/api/search',searchRoutes)
 
 
 //Mongoose

@@ -35,18 +35,20 @@ exports.submitCompetence = async (req,res,next) => {
     )
   }}
 
+  let profileID = await Profile.findOne({userID})
+  profileID=profileID._id
 
   //Update and create if not exist
   for(let i = 0;i<3;i++){
-  let createOne = {userID,level:arrayLevel[i],available}
-  let pushOne = {$push:{"userArray":{userID,level:arrayLevel[i],available}}}
-  const option = { upsert: true, new: true}
+  let createOne = {profileID,level:arrayLevel[i],available}
+  let pushOne = {$push:{"userArray":{profileID,level:arrayLevel[i],available}}}
+  // const option = { upsert: true, new: true,}
   //Create
   const skillExist = await Competences.findOne({skillName:newSkills[i]}) //check if skill doc is there
   if(!skillExist){
     await Competences.create({skillName:newSkills[i],userArray:createOne})
   } else{
-   const userExist = await Competences.findOne({skillName:newSkills[i],"userArray.userID":userID})// User exist in this document or not
+   const userExist = await Competences.findOne({skillName:newSkills[i],"userArray.profileID":profileID})// User exist in this document or not
    console.log(userExist) //skill doc exist but there is no userID => false so push into Array
     if(!userExist){
       console.log("here")
@@ -54,11 +56,10 @@ exports.submitCompetence = async (req,res,next) => {
     } else{
       console.log("hehe")
       await Competences.findOneAndUpdate(
-      {skillName:newSkills[i],"userArray.userID":userID},
-      {"userArray.$.userID":userID,"userArray.$.level":arrayLevel[i],"userArray.$.available":available})
+      {skillName:newSkills[i],"userArray.profileID":profileID},
+      {"userArray.$.profileID":profileID,"userArray.$.level":arrayLevel[i],"userArray.$.available":available})
     }
-  }
-  }
+  }}
   res.status(201).json({msg:"Your profile has been created"})
   }
 catch(err){
