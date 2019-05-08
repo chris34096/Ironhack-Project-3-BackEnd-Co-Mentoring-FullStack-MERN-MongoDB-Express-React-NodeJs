@@ -22,18 +22,26 @@ const ProfileSchema = new Schema({
   //   required:true,
   // },
   medalBronze:{
-    type:Number
+    type:Number,
+    default:0
   },
   medalGold:{
-    type:Number
+    type:Number,
+    default:0
+
   },
-  RequestReceived:type,
-  RequestSent:type,
-  Connection:type,
+  requestReceived:type,
+  requestSent:type,
+  connection:type,
+  available:{
+    type:Boolean,
+    default:true
+  },
   date:{
     type:Date,
     default:Date.now
   }
-});
+}
+);
 
 module.exports = mongoose.model("Profile", ProfileSchema);
