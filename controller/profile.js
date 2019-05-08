@@ -23,20 +23,21 @@ exports.submitCompetence = async (req,res,next) => {
   const {skill1,skill2,skill3,skill1Level,skill2Level,skill3Level,available} = req.body
   const newSkills =[skill1,skill2,skill3]
   const arrayLevel =[skill1Level,skill2Level,skill3Level]
+  let profileID = await Profile.findOne({userID})
+  profileID=profileID._id
   //Find the old one if difference then delete it
-  const oldSkills = await Competences.find({"userArray.userID":userID},"skillName")
+  const oldSkills = await Competences.find({"userArray.profileID":profileID},"skillName")
   if(oldSkills.length > 0){
   const skillToDelete = oldSkills.filter(el => !newSkills.includes(el.skillName))
   console.log(skillToDelete)
     if(skillToDelete.length > 0){
   const abc = await Competences.findOneAndUpdate(
     {skillName:skillToDelete[0].skillName},
-    {$pull:{userArray:{"userID":userID}}}
+    {$pull:{userArray:{"profileID":profileID}}}
     )
   }}
 
-  let profileID = await Profile.findOne({userID})
-  profileID=profileID._id
+  
 
   //Update and create if not exist
   for(let i = 0;i<3;i++){
