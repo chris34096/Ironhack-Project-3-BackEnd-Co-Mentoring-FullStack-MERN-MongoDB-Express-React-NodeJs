@@ -40,10 +40,14 @@ exports.login = (req,res,next) => {
 
 
 exports.signup = (req,res,next) =>{
+  console.log(req.body)
   const {errors, isValid} = validateRegisterInput(req.body);
+  console.log(validateRegisterInput(req.body))
   if(!isValid){
+    console.log(isValid)
     return res.status(400).json({errors})
   }
+  console.log("hehe")
   const {firstName,lastName,email,password} = req.body
   User.findOne({email: email})
   .then(user => {
@@ -61,7 +65,7 @@ exports.signup = (req,res,next) =>{
         });
         return newUser.save();
       })
-      .then(user  => res.status(201).json({message:'User created!',user:user}))
+      .then(user  => res.status(201).json({message:'User created!'}))
       .catch(err => {
         console.log(err)
       })
