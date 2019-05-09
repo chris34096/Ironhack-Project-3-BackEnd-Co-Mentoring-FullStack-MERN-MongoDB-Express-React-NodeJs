@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Create user Schema & Model
-const type = [{type:Schema.Types.ObjectId,ref:"User",date:{type:Date,default:Date.now}}];
 const ProfileSchema = new Schema({
   userID:{
     type:Schema.Types.ObjectId,
@@ -30,9 +29,29 @@ const ProfileSchema = new Schema({
     default:0
 
   },
-  requestReceived:type,
-  requestSent:type,
-  connection:type,
+  requestReceived:[{ 
+    userID:{
+    type:Schema.Types.ObjectId,
+    ref:"User"},
+    message:{
+      type:String,
+      default:"Hello, i would like to connect with you"
+    },
+    date:{type:Date,default:Date.now}
+  }],
+  requestSent:[{ 
+    userID:{
+    type:Schema.Types.ObjectId,
+    ref:"User"},
+    date:{
+      type:Date,default:Date.now
+    }}],
+  connection:[{ 
+    userID:{
+    type:Schema.Types.ObjectId,
+    ref:"User"
+    },
+    date:{type:Date,default:Date.now}}],
   available:{
     type:Boolean,
     default:true
