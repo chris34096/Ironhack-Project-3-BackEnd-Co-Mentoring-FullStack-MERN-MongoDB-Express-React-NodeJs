@@ -59,7 +59,7 @@ exports.submitCompetence = async (req,res,next) => {
       {"userArray.$.profileID":profileID,"userArray.$.level":arrayLevel[i],"userArray.$.available":available})
     }
   }}
-  res.status(201).json({msg:"Your profile has been created"})
+  return res.status(201).json({msg:"Your profile has been created"})
   }
 catch(err){
   console.log(err)
