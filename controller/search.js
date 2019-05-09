@@ -7,7 +7,7 @@ exports.searchMentor = async (req,res,next) =>{
 try{
   const results = await Competences.aggregate([{
     "$match":{
-      "skillName":req.query.q
+      "skillName":req.params.skill
     }},
     {"$unwind":"$userArray"
     },
@@ -64,7 +64,7 @@ catch(err){
 
 exports.profileMentor = async (req,res,next) => {
 try{
-  const results = await Profiles.findById(req.query.id,"-_id -connection -requestReceived -requestSent -__v -date").populate("userID","-_id -date -password -__v")
+  const results = await Profiles.findById(req.params.user_id,"-_id -connection -requestReceived -requestSent -__v -date").populate("userID","-_id -date -password -__v")
  return res.json(results)
   }
 catch(err){

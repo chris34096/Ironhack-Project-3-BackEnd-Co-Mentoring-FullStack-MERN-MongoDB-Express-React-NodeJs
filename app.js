@@ -35,8 +35,8 @@ require('./config/passport')(passport)
 
 
 // Use Routes
-app.use('/api/user',authRoutes)
-app.use('/api/profile',profileRoutes)
+app.use('/api/users',authRoutes) //Signin Signup
+app.use('/api/profiles',profileRoutes)
 app.use('/api/search',searchRoutes)
 
 
