@@ -2,21 +2,38 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport')
+
+const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${
+  process.env.MONGO_PASSWORD
+}@cluster0-owbdv.mongodb.net/${
+  process.env.MONGO_DEFAULT_DATABASE
+}?retryWrites=true`;
 const app = express();
 
-
-//DB config
-const db = require('./config/keys').mongoURI
 
 //Routes
 const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profile.js')
 const searchRoutes = require('./routes/search')
+const connectRoutes = require ('./routes/connect.js')
+
 
 
 
 //All Middlewares
+app.use((req, res, next) => {
+  if (req.path === "/favicon.ico") {
+    console.log("Favicon blocked...");
+    return res.json(
+      "Blocking favicon to not create more sessions... Implement code for handling favicons."
+    );
+  }
+  next();
+});
+
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()) //for application/json
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -38,13 +55,20 @@ require('./config/passport')(passport)
 app.use('/api/users',authRoutes) //Signin Signup
 app.use('/api/profiles',profileRoutes)
 app.use('/api/search',searchRoutes)
+app.use('/api/connect',connectRoutes)
+
+
+
 
 
 //Mongoose
-mongoose
-  .connect(db,{ useNewUrlParser: true , useFindAndModify: false })
-  .then(()=> {
-    console.log('MongoDB connected')
-    app.listen(process.env.PORT || 3000, () => console.log('Server connected'));
+  mongoose
+  .connect(MONGODB_URI, { useNewUrlParser: true,useFindAndModify: false })
+  .then(() => {
+    console.log("Connected to Mongo");
+    app.listen(process.env.PORT || 3000);
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    console.log("err");
+  });
+

@@ -9,10 +9,5 @@ router.post('/login',authController.login)
 
 router.post('/signup',authController.signup)
 
-router.post('/logout')
-
-router.get('/current',isAuth,(req,res) =>{
-  res.json(req.user)
-})
 
 module.exports = router;

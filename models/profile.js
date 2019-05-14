@@ -8,6 +8,14 @@ const ProfileSchema = new Schema({
     ref:"User",
     required:true
   },
+  firstName : {
+    type:String,
+    required:true
+  },
+  lastName :{
+    type:String,
+    required:true
+  },
   companyCity: {
     type: String,
     required: true,
@@ -30,6 +38,7 @@ const ProfileSchema = new Schema({
 
   },
   requestReceived:[{ 
+    _id : false,
     userID:{
     type:Schema.Types.ObjectId,
     ref:"User"},
@@ -39,7 +48,8 @@ const ProfileSchema = new Schema({
     },
     date:{type:Date,default:Date.now}
   }],
-  requestSent:[{ 
+  requestSent:[{
+    _id : false, 
     userID:{
     type:Schema.Types.ObjectId,
     ref:"User"},

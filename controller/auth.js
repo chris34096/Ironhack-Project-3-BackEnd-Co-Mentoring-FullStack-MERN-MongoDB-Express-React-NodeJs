@@ -3,15 +3,22 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const keyJwt = require('../config/keys').secretKey
 const validateRegisterInput = require('../validation/signup')
+const validateLoginInput = require ('../validation/login')
 
 
 exports.login = (req,res,next) => {
+const { errors, isValid } = validateLoginInput(req.body);
+console.log(errors)
+  if (!isValid) {
+    return res.status(400).json({errors});
+  }
  const {email,password} = req.body;
   User.findOne({email:email})
     .then(user => {
       //check for user
       if(!user){
-        return res.status(404).json({msg:'User not found'})
+        errors.email = 'User not found';
+        return res.status(404).json({errors})
       }
       //check password
       bcrypt
@@ -32,7 +39,8 @@ exports.login = (req,res,next) => {
               })
           });
         } else {
-          return res.status(400).json({msg:'Password incorrect'})
+          errors.password = 'Password incorrect';
+          return res.status(400).json({errors})
         }
       })
     })
@@ -42,30 +50,26 @@ exports.login = (req,res,next) => {
 exports.signup = (req,res,next) =>{
   console.log(req.body)
   const {errors, isValid} = validateRegisterInput(req.body);
-  console.log(validateRegisterInput(req.body))
   if(!isValid){
-    console.log(isValid)
     return res.status(400).json({errors})
   }
-  console.log("hehe")
-  const {firstName,lastName,email,password} = req.body
+  const {email,password} = req.body
   User.findOne({email: email})
   .then(user => {
     if(user){
-      return res.status(400).json({msg:'Email already exists.'});
+      errors.email = 'Email already exists.'
+      return res.status(400).json({errors});
     }
       return bcrypt
       .hash(password,12)
       .then(hashedPassword => {
         const newUser = new User ({
-          lastName:lastName,
-          firstName: firstName,
           email:email,
           password:hashedPassword
         });
         return newUser.save();
       })
-      .then(user  => res.status(201).json({message:'User created!'}))
+      .then(user  => res.status(201).json({message:'Account created!'}))
       .catch(err => {
         console.log(err)
       })

@@ -8,6 +8,7 @@ skillName:{
 },
 userArray:[
   {
+    _id : false,
     profileID:{type:Schema.Types.ObjectId,ref:"Profile"},
     level:{type:Number},
     available:{

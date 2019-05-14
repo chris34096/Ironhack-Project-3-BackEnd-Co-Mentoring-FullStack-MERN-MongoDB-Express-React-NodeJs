@@ -1,0 +1,9 @@
+{
+    "env": {
+        "MONGO_USER": "duckytest",
+        "MONGO_PASSWORD": "ducbeo92",
+        "MONGO_DEFAULT_DATABASE": "final-project",
+        "SITE_URL": "http://localhost:3000",
+        "SECRETKEY": "ironhack2019"
+    }
+}
