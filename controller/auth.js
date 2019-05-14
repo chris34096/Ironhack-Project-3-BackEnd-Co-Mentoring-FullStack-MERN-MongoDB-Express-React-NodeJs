@@ -8,7 +8,6 @@ const validateLoginInput = require ('../validation/login')
 
 exports.login = (req,res,next) => {
 const { errors, isValid } = validateLoginInput(req.body);
-console.log(errors)
   if (!isValid) {
     return res.status(400).json({errors});
   }
@@ -26,7 +25,7 @@ console.log(errors)
       .then(isMatch => {
         if(isMatch){
           //user matched
-          const payload ={userId :user._id.toString(), email:user.email}
+          const payload ={userId :user._id.toString(), email:user.email,hasProfile:user.hasProfile}
           //Sign token
           jwt.sign(
             payload,
@@ -48,7 +47,6 @@ console.log(errors)
 
 
 exports.signup = (req,res,next) =>{
-  console.log(req.body)
   const {errors, isValid} = validateRegisterInput(req.body);
   if(!isValid){
     return res.status(400).json({errors})

@@ -24,7 +24,6 @@ catch(err){
 }}
 
 
-
 exports.acceptRequest = async (req,res,next) => {
   const userAccept = req.user._id
   const userPending = req.params.user_id

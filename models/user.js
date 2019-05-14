@@ -15,7 +15,10 @@ const UserSchema = new Schema({
   date:{
     type:Date,
     default:Date.now
+  },
+  hasProfile:{
+    type:Boolean,
+    default:false
   }
 })
-
 module.exports = mongoose.model('User', UserSchema);

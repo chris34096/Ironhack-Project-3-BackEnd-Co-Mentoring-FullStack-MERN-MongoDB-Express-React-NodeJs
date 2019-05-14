@@ -22,12 +22,13 @@ const ProfileSchema = new Schema({
   },
   competencies:{
     type:Array,
+    required:true,
+  },
+  avatar:{
+    type:String,
+    default:"https://res.cloudinary.com/dcmvim0u6/image/upload/v1557839812/27-270956_mario-face-png-super-mario-face-png_oczjbj.jpg",
     required:true
   },
-  // avatar:{
-  //   type:String,
-  //   required:true,
-  // },
   medalBronze:{
     type:Number,
     default:0
@@ -35,7 +36,6 @@ const ProfileSchema = new Schema({
   medalGold:{
     type:Number,
     default:0
-
   },
   requestReceived:[{ 
     _id : false,
@@ -62,9 +62,11 @@ const ProfileSchema = new Schema({
     ref:"User"
     },
     date:{type:Date,default:Date.now}}],
+
   available:{
     type:Boolean,
-    default:true
+    default:true,
+    required:true
   },
   date:{
     type:Date,
