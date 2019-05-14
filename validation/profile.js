@@ -33,6 +33,9 @@ module.exports = function validateProfileInput(data) {
   if (Validator.isEmpty(data.skill2) || Validator.isEmpty(data.skill2Level)) {
     errors.skill2 = 'Please provide your skill and level';
   }
+  if(data.skill2 === data.skill1){
+    errors.skillDiff = "Please select 2 skills different"
+  }
   return {
     errors,
     isValid: isEmpty(errors)
