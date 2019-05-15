@@ -1,4 +1,5 @@
 const Profile = require("../models/profile");
+const User = require ("../models/user.js")
 const Competences = require("../models/competence");
 const validateProfileInput = require ('../validation/profile')
 
@@ -32,12 +33,11 @@ function checkInputEmpty(objectInput,objectstart){
     avatar:avatar,
     available:available
   }
-
   checkInputEmpty(objectInput,objectStart);
   const result = await Profile.findOneAndUpdate({userID},updateOne,option).exec()
   req.profileID = result._id
-  return res.status(201).json({msg:"Your profile has been created"})
-  // return next()
+  await User.findByIdAndUpdate(userID,{hasProfile:true}).exec()
+  return next()
     }
   catch (err) {
         console.log(err)
@@ -47,7 +47,7 @@ function checkInputEmpty(objectInput,objectstart){
 
 exports.submitCompetence = async (req,res,next) => {
   try{
-  const {skill1,skill2,skill2Level,available} = req.body
+  const {skill1,skill2,skill1Level,skill2Level,available} = req.body
   const newSkills =[skill1,skill2]
   const arrayLevel =[skill1Level,skill2Level]
   let profileID = req.profileID
@@ -64,10 +64,8 @@ exports.submitCompetence = async (req,res,next) => {
     )
   }}
 
-  
-
   //Update and create if not exist
-  for(let i = 0;i<3;i++){
+  for(let i = 0;i<2;i++){
   let createOne = {profileID,level:arrayLevel[i],available}
   let pushOne = {$push:{"userArray":{profileID,level:arrayLevel[i],available}}}
   // const option = { upsert: true, new: true,}
@@ -88,6 +86,21 @@ exports.submitCompetence = async (req,res,next) => {
   }}
   return res.status(201).json({msg:"Your profile has been created"})
   }
+catch(err){
+  console.log(err)
+  next(err)
+}}
+
+
+exports.getProfile = async (req, res, next) => {
+  try{
+  const userID = req.user._id;
+  const profile = await Profile.findOne({userID},"firstName lastName competencies companyCity available avatar").exec()
+  if(profile){
+    return res.status(201).json({profile})
+  }
+  return res.status(400).json({message:"No User"})
+}
 catch(err){
   console.log(err)
   next(err)
