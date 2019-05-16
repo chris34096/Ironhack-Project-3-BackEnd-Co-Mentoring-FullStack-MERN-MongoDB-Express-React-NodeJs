@@ -46,6 +46,7 @@ const ProfileSchema = new Schema({
       type:String,
       default:"Hello, i would like to connect with you"
     },
+    fullName:"",
     date:{type:Date,default:Date.now}
   }],
   requestSent:[{
@@ -53,6 +54,7 @@ const ProfileSchema = new Schema({
     userID:{
     type:Schema.Types.ObjectId,
     ref:"User"},
+    fullName:"",
     date:{
       type:Date,default:Date.now
     }}],
@@ -61,6 +63,7 @@ const ProfileSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:"User"
     },
+    fullName:"",
     date:{type:Date,default:Date.now}}],
 
   available:{

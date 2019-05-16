@@ -7,7 +7,7 @@ exports.searchMentor = async (req,res,next) =>{
 try{
   const results = await Competences.aggregate([{
     "$match":{
-      "skillName":req.params.skill
+      "skillName":req.query.q
     }},
     {"$unwind":"$userArray"
     },
@@ -15,13 +15,13 @@ try{
       "from":Profiles.collection.name,
       "localField":"userArray.profileID",
       "foreignField":"_id",
-      "as":"profile-details"
+      "as":"profileDetails"
     }},
     {"$lookup":{
       "from":Users.collection.name,
-      "localField":"profile-details.userID",
+      "localField":"profileDetails.userID",
       "foreignField":"_id",
-      "as":"user-details"
+      "as":"userDetails"
     }},
     {"$project":{
       "_id":0,
@@ -30,22 +30,22 @@ try{
       "date":0,
       "userArray._id":0,
       // "userArray.available":0,
-      "profile-details._id":0,
-      "profile-details.__v":0,
-      "profile-details.userID":0,
-      "profile-details.connection":0,
-      "profile-details.medalBronze":0,
-      "profile-details.medalGold":0,
-      "profile-details.requestReceived":0,
-      "profile-details.requestSent":0,
-      "profile-details.date":0,
-      "user-details.password":0,
-      "user-details.__v":0,
-      "user-details.date":0,      
+      "profileDetails._id":0,
+      "profileDetails.__v":0,
+      "profileDetails.userID":0,
+      "profileDetails.connection":0,
+      "profileDetails.medalBronze":0,
+      "profileDetails.medalGold":0,
+      "profileDetails.requestReceived":0,
+      "profileDetails.requestSent":0,
+      "profileDetails.date":0,
+      "userDetails.password":0,
+      "userDetails.__v":0,
+      "userDetails.date":0,      
     }},
-    {"$unwind":"$profile-details"
+    {"$unwind":"$profileDetails"
     },
-    {"$unwind":"$user-details"
+    {"$unwind":"$userDetails"
     },
     { "$sort" : 
     { "userArray.level" :-1} },

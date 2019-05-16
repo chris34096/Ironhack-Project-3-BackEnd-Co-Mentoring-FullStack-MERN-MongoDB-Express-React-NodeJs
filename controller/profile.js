@@ -94,12 +94,14 @@ catch(err){
 
 exports.getProfile = async (req, res, next) => {
   try{
-  const userID = req.user._id;
-  const profile = await Profile.findOne({userID},"firstName lastName competencies companyCity available avatar").exec()
+  // const userID = req.user._id;
+  const userID = req.query.q
+  const profile = await Profile
+  .findOne({userID},"firstName lastName competencies companyCity available avatar connection requestReceived requestSent")
   if(profile){
     return res.status(201).json({profile})
   }
-  return res.status(400).json({message:"No User"})
+  return res.status(201).json({message:"No User"})
 }
 catch(err){
   console.log(err)
