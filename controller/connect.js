@@ -48,3 +48,20 @@ exports.sendRequest = async (req,res,next) => {
     }
   }
   
+  exports.refuseRequest = async (req,res,next) => {
+    const userRefuse = req.user._id
+    const userSent =req.query.user_id
+    try{
+      await Profiles.findOneAndUpdate({"userID":userRefuse},{
+        $pull:{"requestReceived":{"userID":userSent}}
+      })
+      await Profiles.findOneAndUpdate({"userID":userSent},{
+        $pull:{"requestSent":{"userID":userRefuse}}
+      })
+      res.status(200).json({msg:"Refused"})
+    }
+    catch(err){
+      console.log(err)
+      next(err)
+    }
+  }

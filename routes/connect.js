@@ -5,6 +5,7 @@ const isAuth = require('../middleware/is-Auth')
 
 router.post("/send",isAuth,connectController.sendRequest)
 router.post("/accept",isAuth,connectController.acceptRequest)
+router.post("/refuse",isAuth,connectController.refuseRequest)
 
 module.exports = router
 
