@@ -83,3 +83,21 @@ exports.sendRequest = async (req,res,next) => {
       next(err)
     }
   }
+
+  exports.endConnection = async (req,res,next) => {
+    const userEnd = req.user._id
+    const userBeDeleted =req.query.user_id
+    try{
+      await Profiles.findOneAndUpdate({"userID":userEnd},{
+        $pull:{"connection":{"userID":userBeDeleted}}
+      })
+      await Profiles.findOneAndUpdate({"userID":userBeDeleted},{
+        $pull:{"connection":{"userID":userEnd}}
+      })
+      res.status(200).json({msg:"End"})
+    }
+    catch(err){
+      console.log(err)
+      next(err)
+    }
+  }
