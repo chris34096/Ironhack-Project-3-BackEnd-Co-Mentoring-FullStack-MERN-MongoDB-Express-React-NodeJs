@@ -65,3 +65,21 @@ exports.sendRequest = async (req,res,next) => {
       next(err)
     }
   }
+
+  exports.cancelRequest = async (req,res,next) => {
+    const userCancel = req.user._id
+    const userRecec =req.query.user_id
+    try{
+      await Profiles.findOneAndUpdate({"userID":userRecec},{
+        $pull:{"requestReceived":{"userID":userCancel}}
+      })
+      await Profiles.findOneAndUpdate({"userID":userCancel},{
+        $pull:{"requestSent":{"userID":userRecec}}
+      })
+      res.status(200).json({msg:"Canceled"})
+    }
+    catch(err){
+      console.log(err)
+      next(err)
+    }
+  }
